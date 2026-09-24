@@ -1,0 +1,368 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 0.35s;
+  --dur-base: 0.7s;
+  --dur-page: 0.88s;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #f6f4ee;
+    color: #1e211c;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+
+  ::selection {
+    background: #7c8b6f;
+    color: #f6f4ee;
+  }
+
+  :focus-visible {
+    outline: 2px solid #2c3a2e;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: 78rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* ---- Tombol ---- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-soft),
+      color var(--dur-fast) var(--ease-soft),
+      border-color var(--dur-fast) var(--ease-soft),
+      box-shadow var(--dur-fast) var(--ease-soft);
+  }
+
+  .btn-primary {
+    background-color: #2c3a2e;
+    color: #f6f4ee;
+  }
+
+  .btn-primary:hover {
+    background-color: #7c8b6f;
+    box-shadow: 0 12px 26px -14px rgba(44, 58, 46, 0.7);
+  }
+
+  .btn-ghost {
+    border-color: rgba(44, 58, 46, 0.25);
+    color: #2c3a2e;
+    background-color: transparent;
+  }
+
+  .btn-ghost:hover {
+    border-color: #2c3a2e;
+    background-color: rgba(44, 58, 46, 0.05);
+  }
+
+  .btn-light {
+    background-color: rgba(246, 244, 238, 0.92);
+    color: #2c3a2e;
+  }
+
+  .btn-light:hover {
+    background-color: #f6f4ee;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #4a5647;
+    margin-bottom: 0.4rem;
+  }
+
+  .field {
+    width: 100%;
+    background-color: #fdfcf9;
+    border: 1px solid rgba(44, 58, 46, 0.18);
+    border-radius: 0.5rem;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9375rem;
+    color: #1e211c;
+    transition: border-color var(--dur-fast) var(--ease-soft),
+      box-shadow var(--dur-fast) var(--ease-soft);
+  }
+
+  .field:focus {
+    outline: none;
+    border-color: #7c8b6f;
+    box-shadow: 0 0 0 3px rgba(124, 139, 111, 0.18);
+  }
+
+  .field-error {
+    border-color: #a4503f;
+  }
+
+  .rule {
+    height: 1px;
+    background-color: rgba(44, 58, 46, 0.14);
+  }
+}
+
+/* =====================================================================
+   SISTEM ANIMASI
+   fade + translateY + blur, easing tunggal untuk seluruh situs
+   ===================================================================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(8px);
+  transition: opacity var(--dur-base) var(--ease-soft),
+    transform var(--dur-base) var(--ease-soft),
+    filter var(--dur-base) var(--ease-soft);
+  will-change: opacity, transform, filter;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Transisi antar halaman */
+.page-enter {
+  animation: pageEnter var(--dur-page) var(--ease-soft) both;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.page-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background-color: #f6f4ee;
+  pointer-events: none;
+  opacity: 0;
+  animation: veil var(--dur-page) var(--ease-soft) both;
+}
+
+@keyframes veil {
+  0% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Hero: crossfade + zoom halus */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-soft);
+}
+
+.hero-slide.is-active {
+  opacity: 1;
+}
+
+.hero-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 7.5s linear;
+}
+
+.hero-slide.is-active img {
+  transform: scale(1.1);
+}
+
+.hero-text > * {
+  opacity: 0;
+  transform: translateY(40px);
+  filter: blur(10px);
+  animation: heroText 1s var(--ease-soft) forwards;
+}
+
+.hero-text > *:nth-child(1) {
+  animation-delay: 0.25s;
+}
+.hero-text > *:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.hero-text > *:nth-child(3) {
+  animation-delay: 0.55s;
+}
+
+@keyframes heroText {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Modal */
+.modal-backdrop {
+  animation: fadeIn 0.35s var(--ease-soft) both;
+}
+
+.modal-panel {
+  animation: modalIn 0.45s var(--ease-soft) both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Hover lembut */
+.card-lift {
+  transition: transform var(--dur-fast) var(--ease-soft),
+    box-shadow var(--dur-fast) var(--ease-soft),
+    border-color var(--dur-fast) var(--ease-soft);
+}
+
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px -18px rgba(44, 58, 46, 0.35);
+  border-color: rgba(124, 139, 111, 0.6);
+}
+
+.card-media img {
+  transition: transform 0.9s var(--ease-soft);
+}
+
+.card-lift:hover .card-media img {
+  transform: scale(1.05);
+}
+
+.story-photo {
+  transition: transform var(--dur-fast) var(--ease-soft),
+    box-shadow var(--dur-fast) var(--ease-soft),
+    border-color var(--dur-fast) var(--ease-soft);
+}
+
+.story-photo:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px -18px rgba(44, 58, 46, 0.35);
+  border-color: rgba(124, 139, 111, 0.6);
+}
+
+.story-photo img {
+  transition: transform 0.9s var(--ease-soft), filter 0.9s var(--ease-soft);
+}
+
+.story-photo:hover img {
+  transform: scale(1.06);
+  filter: saturate(1.05);
+}
+
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  transition: background-size var(--dur-fast) var(--ease-soft);
+}
+
+.link-underline:hover {
+  background-size: 100% 1px;
+}
+
+/* Pembatas lengkung antar section, pengganti sobekan kertas */
+.curve-divider {
+  display: block;
+  width: 100%;
+  height: 56px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .hero-text > * {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
